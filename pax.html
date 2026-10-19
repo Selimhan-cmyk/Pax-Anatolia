@@ -569,6 +569,31 @@ body.nuke-shake {
   gap: 4px;
 }
 
+
+/* ==== KİŞİLİK VE KIYI ROZETLERİ ==== */
+.pers-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.coastal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  background: rgba(58,134,255,0.15);
+  color: #5ea4ff;
+  border: 1px solid rgba(58,134,255,0.3);
+}
+
 </style>
 </head>
 <body>
@@ -702,7 +727,6 @@ body.nuke-shake {
       <div class="res">
         <div class="res-item"><span class="lbl">Altın</span><span class="val" id="tbGold">0</span><span class="rate" id="tbGoldRate">+0/sn</span></div>
         <div class="res-item"><span class="lbl">Ordu</span><span class="val" id="tbTroops">0</span></div>
-        <div class="res-item"><span class="lbl">İnsan Gücü</span><span class="val" style="color:#7aaaf0" id="tbManpower">5.000</span></div>
         <div class="res-item"><span class="lbl">Tehdit</span><span class="val" style="color:#e08080" id="tbThreat">%0</span></div>
         <div class="res-item"><span class="lbl">İstikrar</span><span class="stab-bar"><div class="stab-fill" id="tbStab" style="width:100%;background:#4a9d6a"></div></span><span class="val" id="tbStabVal" style="font-size:10px">100</span></div>
         <div class="res-item"><span class="lbl">İl</span><span class="val" id="tbLands">0</span></div>
@@ -3734,8 +3758,144 @@ const ACHIEVEMENTS=[{id:'first_conquest',icon:'⚔️',name:'İlk Fetih',desc:'�
 
 const SCENARIOS=[{id:'standard',name:'Standart Oyun',icon:'🎯',desc:'81 il, 81 bağımsız devlet.',year:1300,apply:()=>({startStates:null})},{id:'ottoman1299',name:'1299 Osmanlı',icon:'☪️',desc:'5 devlet, güçlü Bizans.',year:1299,apply:()=>({startStates:[{capital:'Bilecik',name:'Osmanlı Beyliği',leader:'Osman Gazi',religion:'İslam',gov:'Monarşi',color:'#27ae60',flag:'☪️'},{capital:'İstanbul',name:'Bizans İmparatorluğu',leader:'II. Andronikos',religion:'Ortodoks',gov:'Monarşi',color:'#9b59b6',flag:'☦️'},{capital:'Konya',name:'Anadolu Selçuklu',leader:'II. Mesud',religion:'İslam',gov:'Monarşi',color:'#e67e22',flag:'🏹'},{capital:'Trabzon',name:'Trabzon İmparatorluğu',leader:'II. Aleksios',religion:'Ortodoks',gov:'Monarşi',color:'#3498db',flag:'⚓'},{capital:'Kastamonu',name:'Candaroğulları',leader:'Süleyman Paşa',religion:'İslam',gov:'Monarşi',color:'#e74c3c',flag:'🐺'}]})},{id:'istanbul1453',name:'1453 İstanbul',icon:'🏰',desc:'2 devlet. Final savaş.',year:1453,apply:()=>({startStates:[{capital:'Edirne',name:'Osmanlı İmparatorluğu',leader:'Fatih Sultan Mehmet',religion:'İslam',gov:'Monarşi',color:'#27ae60',flag:'☪️'},{capital:'İstanbul',name:'Bizans İmparatorluğu',leader:'XI. Konstantin',religion:'Ortodoks',gov:'Monarşi',color:'#9b59b6',flag:'☦️'}]})},{id:'kurtulus1919',name:'1919 Kurtuluş',icon:'🇹🇷',desc:'Ankara vs işgalciler.',year:1919,apply:()=>({startStates:[{capital:'Ankara',name:'TBMM Hükümeti',leader:'Mustafa Kemal',religion:'Laik',gov:'Cumhuriyet',color:'#e74c3c',flag:'⭐'},{capital:'İstanbul',name:'Osmanlı Hükümeti',leader:'VI. Mehmed',religion:'İslam',gov:'Monarşi',color:'#d4a848',flag:'☪️'},{capital:'İzmir',name:'Yunan İşgal Kuvvetleri',leader:'Venizelos',religion:'Ortodoks',gov:'Demokrasi',color:'#3498db',flag:'🇬🇷'},{capital:'Adana',name:'Fransız İşgal Kuvvetleri',leader:'Gouraud',religion:'Katolik',gov:'Cumhuriyet',color:'#e67e22',flag:'🇫🇷'},{capital:'Antalya',name:'İtalyan İşgal Kuvvetleri',leader:'Diaz',religion:'Katolik',gov:'Monarşi',color:'#2ecc71',flag:'🇮🇹'}]})}];
 
-const AI_PERSONALITIES={fatih:{name:'Fatih',icon:'⚔️',attackWeight:.85,techWeight:.10,econWeight:.05,diploAggro:.9,fortWeight:.15,caution:.6},kanuni:{name:'Kanuni',icon:'👑',attackWeight:.45,techWeight:.30,econWeight:.25,diploAggro:.5,fortWeight:.35,caution:1.0},yavuz:{name:'Yavuz',icon:'🗡️',attackWeight:.90,techWeight:.05,econWeight:.05,diploAggro:1.0,fortWeight:.05,caution:.5},sokullu:{name:'Sokullu',icon:'🕊️',attackWeight:.25,techWeight:.25,econWeight:.50,diploAggro:.2,fortWeight:.30,caution:1.3},delipetro:{name:'Deli Petro',icon:'🌪️',attackWeight:.70,techWeight:.20,econWeight:.10,diploAggro:.7,fortWeight:.20,caution:.8},mimarsinan:{name:'Mimar Sinan',icon:'🏗️',attackWeight:.20,techWeight:.40,econWeight:.40,diploAggro:.15,fortWeight:.80,caution:1.5}};
-const AI_PERSONALITY_KEYS=Object.keys(AI_PERSONALITIES);
+const AI_PERSONALITIES = {
+  militarist: {
+    key: 'militarist',
+    name: 'Militarist',
+    icon: '⚔️',
+    title: 'Asker Odaklı',
+    desc: 'Bütün gelirini devasa tümenlere yatırır, sınırlarını askerle donatır.',
+    attackWeight: 0.95,
+    recruitWeight: 0.90,
+    techWeight: 0.08,
+    econWeight: 0.05,
+    fortWeight: 0.15,
+    diploAggro: 0.85,
+    caution: 0.65,
+    unitPref: 'cavalry',
+    color: '#e74c3c'
+  },
+  berserker: {
+    key: 'berserker',
+    name: 'Aşırı Agresif',
+    icon: '🩸',
+    title: 'Fatih / Saldırgan',
+    desc: 'Durmaksızın savaş açar, barışı reddeder, yıldırım taarruzları yapar.',
+    attackWeight: 0.98,
+    recruitWeight: 0.75,
+    techWeight: 0.05,
+    econWeight: 0.02,
+    fortWeight: 0.05,
+    diploAggro: 1.25,
+    caution: 0.35,
+    unitPref: 'plane',
+    color: '#c0392b'
+  },
+  savunmaci: {
+    key: 'savunmaci',
+    name: 'Korumacı',
+    icon: '🛡️',
+    title: 'Kale & Savunma',
+    desc: 'Tüm parasını kalelere döker, aşılamaz sınır hatları kurar.',
+    attackWeight: 0.15,
+    recruitWeight: 0.40,
+    techWeight: 0.25,
+    econWeight: 0.30,
+    fortWeight: 0.95,
+    diploAggro: 0.10,
+    caution: 1.80,
+    unitPref: 'infantry',
+    color: '#3498db'
+  },
+  tuccar: {
+    key: 'tuccar',
+    name: 'Tüccar',
+    icon: '💰',
+    title: 'Ekonomi & Refah',
+    desc: 'Şehirlerini maksimum kalkındırır, sürekli ticaret paktı önerir.',
+    attackWeight: 0.20,
+    recruitWeight: 0.30,
+    techWeight: 0.30,
+    econWeight: 0.95,
+    fortWeight: 0.30,
+    diploAggro: 0.15,
+    caution: 1.30,
+    unitPref: 'infantry',
+    color: '#f1c40f'
+  },
+  technocrat: {
+    key: 'technocrat',
+    name: 'Teknokrat',
+    icon: '🔬',
+    title: 'Hava & Bilim',
+    desc: 'Teknoloji ağacını hızla maxlar, Hava Filoları ile hava üstünlüğü kurar.',
+    attackWeight: 0.50,
+    recruitWeight: 0.50,
+    techWeight: 0.95,
+    econWeight: 0.35,
+    fortWeight: 0.25,
+    diploAggro: 0.40,
+    caution: 1.00,
+    unitPref: 'plane',
+    color: '#9b59b6'
+  },
+  diplomat: {
+    key: 'diplomat',
+    name: 'Diplomat',
+    icon: '📜',
+    title: 'İttifak & Pakt',
+    desc: 'Sürekli savunma paktları ve ittifaklar kurar, koalisyon örgütler.',
+    attackWeight: 0.30,
+    recruitWeight: 0.45,
+    techWeight: 0.30,
+    econWeight: 0.40,
+    fortWeight: 0.40,
+    diploAggro: 0.20,
+    caution: 1.40,
+    unitPref: 'archer',
+    color: '#2ecc71'
+  },
+  denizci: {
+    key: 'denizci',
+    name: 'Denizci',
+    icon: '⚓',
+    title: 'Donanma & Amfibi',
+    desc: 'Kıyılarını tahkim eder, uzak okyanus çıkarmalarıyla limanları fetheder.',
+    attackWeight: 0.70,
+    recruitWeight: 0.60,
+    techWeight: 0.35,
+    econWeight: 0.40,
+    fortWeight: 0.30,
+    diploAggro: 0.60,
+    caution: 0.90,
+    unitPref: 'cavalry',
+    isNavalSpecialist: true,
+    color: '#1abc9c'
+  },
+  kaotik: {
+    key: 'kaotik',
+    name: 'Kaotik',
+    icon: '🌪️',
+    title: 'Öngörülemez',
+    desc: 'Beklenmedik savaşlar, ani barışlar ve sürpriz taarruzlar yapar.',
+    attackWeight: 0.75,
+    recruitWeight: 0.60,
+    techWeight: 0.30,
+    econWeight: 0.30,
+    fortWeight: 0.30,
+    diploAggro: 0.80,
+    caution: 0.50,
+    unitPref: 'archer',
+    color: '#e67e22'
+  }
+};
+AI_PERSONALITIES.fatih = AI_PERSONALITIES.berserker;
+AI_PERSONALITIES.yavuz = AI_PERSONALITIES.militarist;
+AI_PERSONALITIES.kanuni = AI_PERSONALITIES.diplomat;
+AI_PERSONALITIES.sokullu = AI_PERSONALITIES.tuccar;
+AI_PERSONALITIES.mimarsinan = AI_PERSONALITIES.savunmaci;
+AI_PERSONALITIES.delipetro = AI_PERSONALITIES.kaotik;
+const AI_PERSONALITY_KEYS = ['militarist','berserker','savunmaci','tuccar','technocrat','diplomat','denizci','kaotik'];
 
 const DIFFICULTIES={easy:{aggro:.35,tickRate:4000,attackDelay:12000,aiCount:2,conquerCooldown:30000,warPeaceSeek:.5,cautionMul:.7,goldMul:1.5,stabBonus:20,forceRatio:1.8},normal:{aggro:.55,tickRate:3000,attackDelay:7000,aiCount:3,conquerCooldown:20000,warPeaceSeek:.3,cautionMul:1.0,goldMul:1.0,stabBonus:0,forceRatio:1.4},hard:{aggro:.75,tickRate:2000,attackDelay:4000,aiCount:4,conquerCooldown:12000,warPeaceSeek:.15,cautionMul:1.4,goldMul:.9,stabBonus:-5,forceRatio:1.2},impossible:{aggro:1.0,tickRate:1500,attackDelay:2500,aiCount:5,conquerCooldown:8000,warPeaceSeek:.05,cautionMul:2.0,goldMul:.75,stabBonus:-10,forceRatio:1.05}};
 function getDiff(){return DIFFICULTIES[state.difficulty]||DIFFICULTIES.normal;}
@@ -3744,6 +3904,18 @@ const CB_TYPES={border:{icon:'🗡️',name:'Komşuluk'},religion:{icon:'✝️'
 const SEASONS=[{id:'spring',name:'İlkbahar',icon:'🌸',atkMul:1.00,defMul:1.00,goldMul:1.00},{id:'summer',name:'Yaz',icon:'☀️',atkMul:1.10,defMul:0.90,goldMul:1.05},{id:'autumn',name:'Sonbahar',icon:'🍂',atkMul:1.00,defMul:1.00,goldMul:1.15},{id:'winter',name:'Kış',icon:'❄️',atkMul:0.75,defMul:1.15,goldMul:0.85}];
 const COLD_EAST=['Kars','Ardahan','Ağrı','Erzurum','Hakkari','Van','Muş','Bitlis','Iğdır','Bayburt','Erzincan'];
 const SEA_ROUTES=[['İstanbul','Yalova'],['İstanbul','Bursa'],['İstanbul','Kocaeli'],['Çanakkale','Balıkesir'],['Balıkesir','İzmir'],['İzmir','Manisa'],['Sinop','Samsun'],['Samsun','Ordu'],['Trabzon','Rize'],['Rize','Artvin'],['Antalya','Muğla'],['Muğla','Aydın'],['Hatay','Adana'],['Mersin','Antalya']];
+
+/* ==== 🌊 DENİZE KIYISI OLAN VE KARASAL DEVLETLER ==== */
+const LANDLOCKED = new Set([
+  'Ankara','Konya','Eskişehir','Sivas','Erzurum','Diyarbakır','Gaziantep','Kayseri','Malatya','Elazığ','Şanlıurfa','Mardin','Batman','Siirt','Şırnak','Hakkari','Van','Bitlis','Muş','Bingöl','Ağrı','Kars','Iğdır','Ardahan','Bayburt','Gümüşhane','Erzincan','Tunceli','Tokat','Amasya','Çorum','Yozgat','Kırşehir','Nevşehir','Niğde','Aksaray','Karaman','Kırıkkale','Çankırı','Karabük','Bolu','Bilecik','Kütahya','Uşak','Afyonkarahisar','Isparta','Burdur','Denizli','Manisa','Kilis','Osmaniye','Adıyaman','Kahramanmaraş',
+  'İsviçre','Avusturya','Çek Cumhuriyeti','Çekya','Slovakya','Macaristan','Sırbistan','Kosova','Kuzey Makedonya','Belarus','Moldova','Ermenistan','Azerbaycan','Kazakistan','Özbekistan','Türkmenistan','Kırgızistan','Tacikistan','Afganistan','Moğolistan','Nepal','Bolivya','Paraguay','Lüksemburg','Etiyopya','Güney Sudan','Çad','Nijer','Mali','Burkina Faso','Orta Afrika Cum.','Uganda','Ruanda','Burundi','Zambiya','Zimbabve','Botsvana','Malavi'
+]);
+
+function isCoastalProvince(name){
+  if(!name) return false;
+  return !LANDLOCKED.has(name);
+}
+
 function isSeaRoute(a,b){const routes = getActiveSeaRoutes(); return routes.some(r=>(r[0]===a&&r[1]===b)||(r[1]===a&&r[0]===b));}
 const FLAG_SYMBOLS=['🏴','⚑','🚩','🏳️','☪️','☦️','✝️','⭐','👑','🦅','🐺','🦁','🐉','⚔️','🛡️','🏹','⚓','🔥','💎','🌙','☀️','⚜️','🔱','🌲','🦌','🐂','🌹','⚡','🌊','🏔️','🍇','🐎','🎯'];
 const FLAG_COLORS=['#c9453c','#d4a848','#4a9d6a','#4a7fb5','#9b59b6','#1abc9c','#e67e22','#e91e63','#2c3e50','#7f8c8d','#16a085','#8e44ad','#27ae60','#2980b9','#c0392b','#f39c12','#1a1a1a','#f5f5f5','#0a0c14','#8b1e1e'];
@@ -3802,7 +3974,7 @@ const Sound=(()=>{let ctx=null,enabled=true;function ensure(){if(!ctx){try{ctx=n
 toggle(){enabled=!enabled;return enabled;}};})();
 
 /* ==== STATE ==== */
-const state={activeMap:'turkey',general:null,threat:0,manpower:5000,maxManpower:5000,scenario:'standard',difficulty:'normal',started:false,finished:false,provinces:{},players:{},myId:'me',startTime:0,relations:{},vassals:{},wars:{},alliances:{},achievements:{},battleLog:[],news:[],chat:[],season:0,seasonChangeAt:0,year:1300,speed:1,gameMinutes:0,lastRealTick:0,lastEcoTick:0,lastAITick:0,lastSyncTick:0,lastUITick:0,lastEventTick:0,lastStabTick:0,lastFormCheck:0,lastTradeTick:0,lastDiploTick:0,lastRebelTick:0,lastAssimTick:0,lastPlagueTick:0,lastWarTick:0,lastCalendarTick:0,history:[],localScores:{},fogEnabled:false,activeMarches:{},pacts:{},unreadChat:0,pendingDiploOffers:[]};
+const state={activeMap:'turkey',general:null,threat:0,scenario:'standard',difficulty:'normal',started:false,finished:false,provinces:{},players:{},myId:'me',startTime:0,relations:{},vassals:{},wars:{},alliances:{},achievements:{},battleLog:[],news:[],chat:[],season:0,seasonChangeAt:0,year:1300,speed:1,gameMinutes:0,lastRealTick:0,lastEcoTick:0,lastAITick:0,lastSyncTick:0,lastUITick:0,lastEventTick:0,lastStabTick:0,lastFormCheck:0,lastTradeTick:0,lastDiploTick:0,lastRebelTick:0,lastAssimTick:0,lastPlagueTick:0,lastWarTick:0,lastCalendarTick:0,history:[],localScores:{},fogEnabled:false,activeMarches:{},pacts:{},unreadChat:0,pendingDiploOffers:[]};
 
 let map=null,geoLayer=null,currentTileLayer=null;
 const provinceLayers={},provinceLabels={},capitalMarkers={};
@@ -4014,7 +4186,20 @@ function hostFort(a,m){const pl=state.players[a],p=state.provinces[m.prov];if(!p
 function hostDev(a,m){const pl=state.players[a],p=state.provinces[m.prov];if(!pl||!p||p.owner!==a)return;if((p.devLevel||0)>=DEV_MAX)return;const c=devCost(p.devLevel||0);if((pl.gold||0)<c)return;pl.gold-=c;p.devLevel=(p.devLevel||0)+1;log(`${pl.name} → ${m.prov} Kalkınma Lv.${p.devLevel}`,'success');Sound.build();updateUI();broadcastSync();refreshPanelIfOpen();}
 function hostMove(a,m){const src=state.provinces[m.src],tgt=state.provinces[m.tgt],pl=state.players[a];if(!src||!tgt||!pl)return;if(src.owner!==a||tgt.owner!==a)return;if(!src.neighbors.includes(m.tgt)&&!isSeaRoute(m.src,m.tgt))return;const amt=Math.max(1,Math.min(src.troops-5,parseInt(m.amt)||0));if(amt<=0)return;src.troops-=amt;tgt.troops+=amt;refreshStyles();updateUI();broadcastSync();refreshPanelIfOpen();}
 function hostTax(a,m){const pl=state.players[a],p=state.provinces[m.prov];if(!pl||!p||p.owner!==a)return;const r=Math.max(0,Math.min(100,parseInt(m.rate)||0));p.taxRate=r;const stab=p.taxRate>50?-3:p.taxRate<20?+2:0;if(stab)pl.stability=Math.max(0,Math.min(100,(pl.stability||100)+stab));updateUI();broadcastSync();refreshPanelIfOpen();}
-function hostNaval(a,m){const pl=state.players[a];const src=state.provinces[m.src],tgt=state.provinces[m.tgt];if(!pl||!src||!tgt)return;if(src.owner!==a)return;if(!isSeaRoute(m.src,m.tgt))return;const force=Math.floor(src.troops*.5);if(force<5)return;pl.gold=Math.max(0,(pl.gold||0)-100);hostExecuteAttack(a,m.src,m.tgt,true);checkAch('naval',a);}
+function hostNaval(a,m){
+  const pl=state.players[a];
+  const src=state.provinces[m.src],tgt=state.provinces[m.tgt];
+  if(!pl||!src||!tgt)return;
+  if(src.owner!==a)return;
+  const isOcean = !!m.ocean;
+  if(!isOcean && !isSeaRoute(m.src,m.tgt))return;
+  if(isOcean && (!isCoastalProvince(m.src) || !isCoastalProvince(m.tgt)))return;
+  const cost = isOcean ? 350 : 100;
+  if((pl.gold||0)<cost)return;
+  pl.gold -= cost;
+  hostExecuteAttack(a,m.src,m.tgt,isOcean ? 'ocean' : true);
+  checkAch('naval',a);
+}
 function hostAssim(a,m){const pl=state.players[a],p=state.provinces[m.prov];if(!pl||!p||p.owner!==a)return;const c=250;if((pl.gold||0)<c)return;pl.gold-=c;p.cultureAssim=Math.min(100,(p.cultureAssim||0)+25);updateUI();broadcastSync();refreshPanelIfOpen();}
 function handleFlagChange(a,m){const pl=state.players[a];if(!pl)return;pl.flag={symbol:m.symbol,color:m.color,image:m.image||null};log(`🎨 ${pl.name} bayrağını değiştirdi`,'info');updateUI();updateWarPanel();broadcastSync();}
 function handleNameChange(a,m){const pl=state.players[a];if(!pl)return;pl.name=m.name;pl.customName=true;log(`📝 ${m.oldName||'Devlet'} → ${m.name}`,'success');if(a===state.myId){toast(`📝 Yeni isim: ${m.name}`,'gold',3000);checkAch('name_changer',state.myId);}updateUI();updateWarPanel();broadcastSync();}
@@ -4177,7 +4362,7 @@ function setupMapFeatures(feats, mapType){
       const isHoly = isME ? !!f.properties.holy : ['Konya','İstanbul','Şanlıurfa'].includes(name);
       const hasCanal = isME ? !!f.properties.canal : false;
       const hasStrait = isME ? !!f.properties.strait : ['İstanbul','Çanakkale'].includes(name);
-      const capitalCity = isME ? (info.capital || name) : name;
+      const capitalCity = isME ? (info.capital || name) : name; const isCoastal = isCoastalProvince(name);
 
       state.players[stateId] = {
         id: stateId,
@@ -4216,7 +4401,7 @@ function setupMapFeatures(feats, mapType){
         layer,
         neighbors: isEA ? (EURASIA_NEIGHBORS[name] || []) : (isME ? (MIDDLE_EAST_NEIGHBORS[name] || []) : []), culture: (isEA||isME) ? (info.culture||'Türk') : assignCulture(name),
         ai: true,
-        fort: Math.floor(Math.random() * 2),
+        isCoastal: isCoastalProvince(name), fort: Math.floor(Math.random() * 2),
         devLevel: 0,
         culture: isME ? (info.culture || 'Arap') : assignCulture(name),
         cultureAssim: 0,
@@ -4548,6 +4733,7 @@ function showOwnPanel(name){
       <div class="sub"><span style="color:${me.color};font-weight:700">${escapeHtml(me.name)}</span><span class="tag-religion ${relTag.cls}">${escapeHtml(relTag.tag)}</span><span style="color:var(--text3)">🌍 ${cultIcon} ${cult}${assim<100?' ('+Math.floor(assim)+'%)':''}</span></div>
       ${me.slogan?`<div style="text-align:center;margin-bottom:8px"><span class="slogan-badge">"${escapeHtml(me.slogan)}"</span></div>`:''}
       <div class="ir"><span>Ordu</span><b>${p.troops}</b></div>
+      <div class="ir"><span>🌊 Kıyı Durumu</span><b>${isCoastalProvince(name) ? '<span class="coastal-badge">🌊 Denize Kıyısı Var</span>' : '<span style="color:var(--text3)">🏜️ Karasal</span>'}</b></div>
       <div class="ir"><span>🏞️ Arazi</span><b>${getProvinceTerrain(name).icon} ${getProvinceTerrain(name).name}</b></div>
       <div class="ir"><span>⚔️ Saldırı</span><b style="color:#e74c3c">+${Math.round((atk-1)*100)}%</b></div>
       <div class="ir"><span>🛡️ Savunma</span><b style="color:#4a7fb5">+${Math.round((def-1)*100)}%</b></div>
@@ -4592,24 +4778,40 @@ function showAttackPanel(name){
   const target=state.provinces[name],tgtOwner=state.players[target.owner],me=state.players[state.myId];
   if(!me||!target)return;
   const myAtt=target.neighbors.filter(n=>state.provinces[n].owner===state.myId);
-  const activeRoutes=getActiveSeaRoutes(); const navalAtt=activeRoutes.filter(r=>r[1]===name).map(r=>r[0]).concat(activeRoutes.filter(r=>r[0]===name).map(r=>r[1])).filter(n=>state.provinces[n]&&state.provinces[n].owner===state.myId);
+  const activeRoutes=getActiveSeaRoutes(); 
+  const navalAtt=activeRoutes.filter(r=>r[1]===name).map(r=>r[0]).concat(activeRoutes.filter(r=>r[0]===name).map(r=>r[1])).filter(n=>state.provinces[n]&&state.provinces[n].owner===state.myId);
+
+  // Kıyı Durumu ve Okyanus Çıkarması Kontrolü
+  const isTargetCoastal = isCoastalProvince(name);
+  const myCoastalProvinces = Object.keys(state.provinces).filter(n => state.provinces[n].owner === state.myId && isCoastalProvince(n));
+  const hasOceanNavalOption = isTargetCoastal && myCoastalProvinces.length > 0;
+  const oceanNavalSrc = hasOceanNavalOption ? myCoastalProvinces.slice().sort((a,b) => state.provinces[b].troops - state.provinces[a].troops)[0] : null;
+
   const relTag=tgtOwner?tgtOwner.religionTag||religionTagOf(tgtOwner.religion):{tag:'?',cls:'other'};
   const relation=tgtOwner?getRelation(state.myId,target.owner):'peace';
   const relInfo=RELATIONS[relation]||RELATIONS.peace;
   const displayName=target.customName||name;
   const title=getProvinceTitle(name);
+
+  // AI Kişilik Rozeti
+  const pers = tgtOwner ? (AI_PERSONALITIES[tgtOwner.personality] || AI_PERSONALITIES.militarist) : null;
+  const persHtml = (tgtOwner && pers) ? `<span class="pers-badge" style="background:${pers.color}22;border:1px solid ${pers.color};color:${pers.color}">${pers.icon} ${pers.name} (${pers.title})</span>` : '';
+
   const el=document.getElementById('info');
   el.classList.add('show');
-  if(!myAtt.length&&!navalAtt.length){
-    el.innerHTML=`<div class="hd"><div class="cn">${escapeHtml(displayName)}</div><button class="close" id="panelClose">✕</button></div><div class="bd"><div class="sub"><span style="color:${tgtOwner?tgtOwner.color:'#fff'};font-weight:700">${escapeHtml(tgtOwner?tgtOwner.name:'?')}</span></div><div style="color:var(--red);font-size:12px;text-align:center;padding:10px 0;font-weight:600">⚠️ Komşu ilin yok</div></div>`;
+
+  if(!myAtt.length && !navalAtt.length && !hasOceanNavalOption){
+    el.innerHTML=`<div class="hd"><div class="cn">${escapeHtml(displayName)}</div><button class="close" id="panelClose">✕</button></div><div class="bd"><div class="sub"><span style="color:${tgtOwner?tgtOwner.color:'#fff'};font-weight:700">${escapeHtml(tgtOwner?tgtOwner.name:'?')}</span> ${persHtml}</div><div style="color:var(--red);font-size:12px;text-align:center;padding:10px 0;font-weight:600">⚠️ Komşu ilin yok ve bu hedefe deniz erişimi bulunmuyor</div></div>`;
     document.getElementById('panelClose').onclick=closePanel;
     currentPanel={name,type:'enemy'};
     return;
   }
+
   myAtt.sort((a,b)=>state.provinces[b].troops-state.provinces[a].troops);
-  const best=myAtt[0]||navalAtt[0];
-  const srcP=state.provinces[best];
-  const isNavalOnly=!myAtt.length;
+  const best = myAtt[0] || navalAtt[0] || oceanNavalSrc;
+  const srcP = state.provinces[best];
+  const isNavalOnly = !myAtt.length;
+
   const aRelB=RELIGION_BONUS[me.religion]||{troop:1},aGovB=GOV_BONUS[me.gov]||{troop:1};
   const aStab=Math.max(.7,(me.stability||100)/100);
   const aSeason=getSeasonAttackMul(best);
@@ -4625,20 +4827,19 @@ function showAttackPanel(name){
   const chanceColor=chance>=65?'#4a9d6a':chance>=40?'#d4a848':'#c9453c';
   const fort=target.fort||0,dev=target.devLevel||0;
   const isCap=tgtOwner&&tgtOwner.capital===name;
-  const tgtCulture=target.culture||'Türk';
   const canAtk=canAttackRelation(state.myId,target.owner);
   const siege=fort>=3;
-  const season=SEASONS[state.season];
   const warDur=tgtOwner?getWarDuration(state.myId,target.owner):0;
+
   el.innerHTML=`
     <div class="hd"><div class="cn">${isCap?'⭐ ':''}${escapeHtml(displayName)} ${fort>0?`<span style="color:#d4a848">🏰${fort}</span>`:''} ${title?`<span class="province-title ${title.cls}">${title.icon} ${title.name}</span>`:''}</div><button class="close" id="panelClose">✕</button></div>
     <div class="bd">
-      <div class="sub">Hedef: <b style="color:${tgtOwner?tgtOwner.color:'#fff'}">${escapeHtml(tgtOwner?tgtOwner.name:'?')}</b><span class="tag-religion ${relTag.cls}">${escapeHtml(relTag.tag)}</span><span class="${relInfo.cls}" style="font-size:9px;padding:2px 6px;border-radius:3px;font-weight:700">${relInfo.icon} ${relInfo.label}</span></div>
+      <div class="sub">Hedef: <b style="color:${tgtOwner?tgtOwner.color:'#fff'}">${escapeHtml(tgtOwner?tgtOwner.name:'?')}</b> ${persHtml} <span class="tag-religion ${relTag.cls}">${escapeHtml(relTag.tag)}</span><span class="${relInfo.cls}" style="font-size:9px;padding:2px 6px;border-radius:3px;font-weight:700">${relInfo.icon} ${relInfo.label}</span></div>
       ${tgtOwner&&tgtOwner.slogan?`<div style="text-align:center;margin-bottom:8px"><span class="slogan-badge">"${escapeHtml(tgtOwner.slogan)}"</span></div>`:''}
       ${relation==='war'?`<div class="ir"><span>⚔️ Savaş süresi</span><b style="color:#c9453c">${formatWarDuration(warDur)}</b></div>`:''}
       <div class="ir"><span>Hedef Ordu</span><b>${target.troops}</b></div>
-      <div class="ir"><span>🏞️ Arazi</span><b>${getProvinceTerrain(name).icon} ${getProvinceTerrain(name).name} <small style="color:var(--text3)">(Sav:+${Math.round((getProvinceTerrain(name).defBonus-1)*100)}% Sald:${Math.round((getProvinceTerrain(name).atkBonus-1)*100)}%)</small></b></div>
-      <div class="ir"><span>Saldıran İl</span><b>${escapeHtml(state.provinces[best].customName||best)} (${srcP.troops})</b></div>
+      <div class="ir"><span>🏞️ Arazi & Kıyı</span><b>${getProvinceTerrain(name).icon} ${getProvinceTerrain(name).name} ${isTargetCoastal ? '🌊' : '🏜️'} <small style="color:var(--text3)">(Sav:+${Math.round((getProvinceTerrain(name).defBonus-1)*100)}% Sald:${Math.round((getProvinceTerrain(name).atkBonus-1)*100)}%)</small></b></div>
+      <div class="ir"><span>Saldıran İl / Liman</span><b>${escapeHtml(state.provinces[best].customName||best)} (${srcP.troops})</b></div>
       <div class="ir"><span>⚔️ Saldırı</span><b style="color:#e74c3c">${Math.round(ap)}</b></div>
       <div class="ir"><span>🛡️ Savunma</span><b style="color:#4a7fb5">${Math.round(dp)}</b></div>
       <div class="ir"><span>Zafer Şansı</span><b style="color:${chanceColor}">~%${chance}</b></div>
@@ -4646,19 +4847,21 @@ function showAttackPanel(name){
       ${!canAtk.ok?`<div style="color:var(--red);font-size:11px;text-align:center;padding:8px;background:rgba(201,69,60,.1);border-radius:4px;margin-top:8px">⚠️ ${canAtk.reason}</div>`:''}
       <div class="section-lbl">🎯 Hedef</div>
       <div class="actions"><button class="btn btn-sm" onclick="showWarTargetModal('${escapeHtml(name)}')">🎯 Hedef Belirle</button></div>
-      <div class="section-lbl">⚔️ Saldırı</div>
-      <div class="actions wide"><button class="btn btn-danger" id="attackBtn" style="padding:12px;font-size:13px" ${!canAtk.ok?'disabled':''}>⚔️ SALDIR</button></div>
-      ${!isNavalOnly&&navalAtt.length?`<div class="actions wide"><button class="btn btn-cyan" id="navalBtn" style="padding:10px" ${!canAtk.ok||me.gold<100?'disabled':''}>⚓ DENİZ ÇIKARMASI (100💰)</button></div>`:''}
+      <div class="section-lbl">⚔️ Taarruz Seçenekleri</div>
+      ${!isNavalOnly ? `<div class="actions wide"><button class="btn btn-danger" id="attackBtn" style="padding:12px;font-size:13px" ${!canAtk.ok?'disabled':''}>⚔️ KARA TAARRUZU</button></div>` : ''}
+      ${navalAtt.length ? `<div class="actions wide"><button class="btn btn-cyan" id="navalBtn" style="padding:10px" ${!canAtk.ok||(me.gold||0)<100?'disabled':''}>⚓ YAKIN DENİZ ÇIKARMASI (100💰)</button></div>` : ''}
+      ${hasOceanNavalOption ? `<div class="actions wide"><button class="btn btn-cyan" id="oceanNavalBtn" style="padding:11px;background:linear-gradient(135deg,#16a085,#2980b9);border-color:#1abc9c;font-size:12px;font-weight:700" ${!canAtk.ok||(me.gold||0)<350?'disabled':''}>🌊 OKYANUS / UZAK DENİZ ÇIKARMASI (350💰)</button></div><div style="font-size:9px;color:var(--text3);text-align:center;margin-top:2px">⚓ Çıkarma Limanı: <b>${escapeHtml(oceanNavalSrc)}</b> (${state.provinces[oceanNavalSrc].troops} asker) · İntikal: ~18 sn · Maliyet: 350💰</div>` : ''}
       <div class="section-lbl">🕵️ Casusluk</div>
       <div class="actions">
-        <button class="spy-btn" id="spyInfoBtn" ${me.gold>=200?'':'disabled'}>🔍 Bilgi (200💰)</button>
-        <button class="spy-btn" id="spySabBtn" ${me.gold>=400?'':'disabled'}>🗡️ Sabotaj (400💰)</button>
+        <button class="spy-btn" id="spyInfoBtn" ${(me.gold||0)>=200?'':'disabled'}>🔍 Bilgi (200💰)</button>
+        <button class="spy-btn" id="spySabBtn" ${(me.gold||0)>=400?'':'disabled'}>🗡️ Sabotaj (400💰)</button>
       </div>
     </div>
   `;
   document.getElementById('panelClose').onclick=closePanel;
   const atkB=document.getElementById('attackBtn');if(atkB)atkB.onclick=()=>doAttack(best,name);
-  const nb=document.getElementById('navalBtn');if(nb)nb.onclick=()=>doNaval(best,name);
+  const nb=document.getElementById('navalBtn');if(nb)nb.onclick=()=>doNaval(best,name,false);
+  const ob=document.getElementById('oceanNavalBtn');if(ob)ob.onclick=()=>doNaval(oceanNavalSrc,name,true);
   const s1=document.getElementById('spyInfoBtn');if(s1)s1.onclick=()=>doSpyAction(target.owner,'info');
   const s2=document.getElementById('spySabBtn');if(s2)s2.onclick=()=>doSpyAction(target.owner,'sabotage');
   currentPanel={name,type:'enemy'};
@@ -4666,12 +4869,21 @@ function showAttackPanel(name){
 
 /* ==== AKSİYONLAR ==== */
 function doRecruit(prov,amt,unit){const me=state.players[state.myId],p=state.provinces[prov];if(!me||!p||p.owner!==state.myId)return;unit=unit||'infantry';const cost=amt*UNIT_TYPES[unit].cost;if((me.gold||0)<cost)return toast(`${cost}💰 gerek`,'war');
-   if((state.manpower||0)<amt)return toast(`İnsan gücü yetersiz! (${state.manpower||0} mevcut)`,'war');
-   state.manpower = Math.max(0, (state.manpower||0) - amt);if(net.mode==='client'){sendAction({a:'recruit',prov,amt,unit});return;}hostRecruit(state.myId,{prov,amt,unit});}
+if(net.mode==='client'){sendAction({a:'recruit',prov,amt,unit});return;}hostRecruit(state.myId,{prov,amt,unit});}
 function doFortUpgrade(prov){const me=state.players[state.myId],p=state.provinces[prov];if(!me||!p||p.owner!==state.myId)return;if((p.fort||0)>=FORT_MAX)return toast('MAX','war');const c=fortCost(p.fort||0);if((me.gold||0)<c)return toast(`${c}💰`,'war');if(net.mode==='client'){sendAction({a:'fort',prov});return;}hostFort(state.myId,{prov});}
 function doDev(prov){const me=state.players[state.myId],p=state.provinces[prov];if(!me||!p||p.owner!==state.myId)return;if((p.devLevel||0)>=DEV_MAX)return toast('MAX','war');const c=devCost(p.devLevel||0);if((me.gold||0)<c)return toast(`${c}💰`,'war');if(net.mode==='client'){sendAction({a:'dev',prov});return;}hostDev(state.myId,{prov});}
 function doMove(s,t,amt){const me=state.players[state.myId],src=state.provinces[s],tgt=state.provinces[t];if(!me||!src||!tgt)return;if(src.owner!==state.myId||tgt.owner!==state.myId)return;if(!src.neighbors.includes(t)&&!isSeaRoute(s,t))return toast('Komşu değil','war');amt=Math.max(1,Math.min(src.troops-5,parseInt(amt)||0));if(amt<=0)return toast('Miktar gir','war');if(net.mode==='client'){sendAction({a:'move',src:s,tgt:t,amt});return;}hostMove(state.myId,{src:s,tgt:t,amt});}
-function doNaval(s,t){const me=state.players[state.myId];if(!me)return;if((me.gold||0)<100)return toast('100💰 gerek','war');if(net.mode==='client'){sendAction({a:'naval',src:s,tgt:t});return;}hostNaval(state.myId,{src:s,tgt:t});}
+function doNaval(s,t,isOcean){
+  const me=state.players[state.myId];
+  if(!me)return;
+  const cost = isOcean ? 350 : 100;
+  if((me.gold||0)<cost)return toast(`${cost}💰 gerek`,'war');
+  if(net.mode==='client'){
+    sendAction({a:'naval',src:s,tgt:t,ocean:!!isOcean});
+    return;
+  }
+  hostNaval(state.myId,{src:s,tgt:t,ocean:!!isOcean});
+}
 function doTax(prov,rate){const me=state.players[state.myId],p=state.provinces[prov];if(!me||!p||p.owner!==state.myId)return;if(net.mode==='client'){sendAction({a:'tax',prov,rate});return;}hostTax(state.myId,{prov,rate});}
 function doAssim(prov){const me=state.players[state.myId];if(!me)return;if((me.gold||0)<250)return toast('250💰','war');if(net.mode==='client'){sendAction({a:'assim',prov});return;}hostAssim(state.myId,{prov});}
 function doTechUpgrade(b){if(!TECH[b])return;const me=state.players[state.myId];if(!me)return;if(!me.tech)me.tech={military:0,defense:0,economy:0};const l=me.tech[b];if(l>=TECH_MAX)return toast('MAX','war');const c=techCost(b,l);if((me.gold||0)<c)return toast(`${c}💰`,'war');if(net.mode==='client'){sendAction({a:'tech',branch:b});return;}hostTech(state.myId,{branch:b});}
@@ -4683,8 +4895,11 @@ function hireAdvisorUI(role){const me=state.players[state.myId];if(!me)return;co
 function hostExecuteAttack(actorId,srcName,tgtName,isNaval){
   const src = state.provinces[srcName], tgt = state.provinces[tgtName];
   if(!src || !tgt || src.owner !== actorId || tgt.owner === actorId) return;
+  const isOceanNaval = isNaval === 'ocean';
+  const isDirectNaval = isNaval === true;
   if(!isNaval && !src.neighbors.includes(tgtName)) return;
-  if(isNaval && !isSeaRoute(srcName, tgtName)) return;
+  if(isDirectNaval && !isSeaRoute(srcName, tgtName)) return;
+  if(isOceanNaval && (!isCoastalProvince(srcName) || !isCoastalProvince(tgtName))) return;
   if(src.troops < 10) return;
   const canAtk = canAttackRelation(actorId, tgt.owner);
   if(!canAtk.ok){
@@ -4706,13 +4921,15 @@ function hostExecuteAttack(actorId,srcName,tgtName,isNaval){
   const terr = getProvinceTerrain(tgtName);
 
   // İntikal süresi hesapla (HOI4 mantığı)
-  let duration = 3800; // Standart kara intikali ~3.8 sn
+  let duration = 3800;
   if(unit.air){
-    duration = 1800; // Uçaklar çok hızlı intikal eder (1.8 sn)
-  } else if(isNaval){
-    duration = 8500; // Deniz çıkarmaları belirgin şekilde daha yavaş (8.5 sn)
+    duration = 1800;
+  } else if(isOceanNaval){
+    duration = 18000; // Okyanus / Uzak deniz çıkarması 18 saniye sürer (daha uzun!)
+  } else if(isDirectNaval){
+    duration = 8500; // Yakın deniz çıkarması 8.5 saniye
   } else {
-    duration = Math.round(3800 * (1 / (terr.speedMul || 1.0))); // Dağlıkta ~5.4 sn, ovada 3.8 sn
+    duration = Math.round(3800 * (1 / (terr.speedMul || 1.0)));
   }
 
   const force = Math.floor(src.troops * 0.70);
@@ -4724,7 +4941,8 @@ function hostExecuteAttack(actorId,srcName,tgtName,isNaval){
     actorId,
     srcName,
     tgtName,
-    isNaval,
+    isNaval: !!isNaval,
+    isOceanNaval: !!isOceanNaval,
     unitKey,
     force,
     startTime: Date.now(),
@@ -4738,11 +4956,13 @@ function hostExecuteAttack(actorId,srcName,tgtName,isNaval){
   // Ses ve bildirim
   if(actorId === state.myId){
     Sound.attack();
-    toast(`⚔️ Birlikler ${tgtName} hedefine intikal ediyor (${(duration/1000).toFixed(1)} sn)...`, 'info', 2200);
+    const typeLabel = isOceanNaval ? '🌊 Okyanus Çıkarması' : (isDirectNaval ? '⚓ Deniz Çıkarması' : '⚔️ Taarruz');
+    toast(`${typeLabel}: ${tgtName} hedefine intikal başladı (${(duration/1000).toFixed(1)} sn)...`, 'info', 2500);
   }
   if(tgt.owner === state.myId){
     Sound.attack();
-    toast(`⚠️ DİKKAT! ${actor.name} orduları ${tgtName} hedefine ilerliyor! İntikal: ${(duration/1000).toFixed(1)} sn`, 'war', 4000);
+    const warnType = isOceanNaval ? '🌊 AMFİBİ OKYANUS ÇIKARMASI' : (isDirectNaval ? '⚓ DENİZ ÇIKARMASI' : '⚔️ SALDIRI');
+    toast(`⚠️ DİKKAT! ${actor.name} ${tgtName} kıyılarına ${warnType} başlattı! (${(duration/1000).toFixed(1)} sn)`, 'war', 5000);
   }
 
   // Harita animasyonunu başlat
@@ -4766,7 +4986,7 @@ function spawnMarchAnimation(march){
   const c2 = tgtLayer.getBounds().getCenter();
   const actor = state.players[march.actorId] || { color: '#e74c3c' };
   const unit = UNIT_TYPES[march.unitKey] || UNIT_TYPES.infantry;
-  const iconChar = unit.icon;
+  const iconChar = march.isOceanNaval ? '🚢' : (march.isNaval ? '⚓' : unit.icon);
 
   const div = document.createElement('div');
   div.className = 'hoi4-march-marker';
@@ -4794,7 +5014,7 @@ function spawnMarchAnimation(march){
     const lat = c1.lat + (c2.lat - c1.lat) * pct;
     const lng = c1.lng + (c2.lng - c1.lng) * pct;
     const dLat = c2.lat - c1.lat, dLng = c2.lng - c1.lng;
-    const arc = Math.sin(pct * Math.PI) * 0.16;
+    const arc = Math.sin(pct * Math.PI) * (march.isOceanNaval ? 0.35 : 0.16);
     const curLat = lat - dLng * arc;
     const curLng = lng + dLat * arc;
 
@@ -5161,7 +5381,7 @@ function gameLoop(){
   state.gameMinutes+=(dt/1000)*speed*2;
   // Ekonomi tick (hıza göre)
   const diff=getDiff();
-  if(auth&&now-state.lastEcoTick>=1000/speed){state.lastEcoTick=now;doEconomyTick();doManpowerTick();}
+  if(auth&&now-state.lastEcoTick>=1000/speed){state.lastEcoTick=now;doEconomyTick();}
   if(auth&&now-state.lastAITick>=diff.tickRate/speed){state.lastAITick=now;doAITick();}
   if(auth&&now-state.lastStabTick>=5000/speed){state.lastStabTick=now;doStabilityTick();}
   if(auth&&now-state.lastEventTick>=25000/speed){state.lastEventTick=now;doRandomEvent();}
@@ -5254,20 +5474,8 @@ function doEconomyTick(){
   }
 }
 
-function doManpowerTick(){
-  const me = state.players[state.myId];
-  if(!me) return;
-  let provCount = 0, totalPop = 0;
-  for(const n in state.provinces){
-    if(state.provinces[n].owner === state.myId){
-      provCount++; totalPop += state.provinces[n].pop || .5;
-    }
-  }
-  state.maxManpower = Math.max(2000, Math.floor(totalPop * 1200) + provCount * 300);
-  state.manpower = Math.min(state.maxManpower, (state.manpower || 0) + Math.floor(provCount * 12 + 25));
   // Tehdit yavaşça söner
   if(state.threat > 0) state.threat = Math.max(0, state.threat - .2);
-}
 
 function doStabilityTick(){for(const pid in state.players){const p=state.players[pid];if(p.eliminated)continue;if(p.stability==null)p.stability=100;let holyCount = 0;
    for(const n in state.provinces){ if(state.provinces[n].owner===pid && state.provinces[n].isHoly) holyCount++; }
@@ -5416,20 +5624,51 @@ function aiAct(pid){
   if(!provs.length)return;
   const provsSorted=provs.slice().sort((a,b)=>state.provinces[b].troops-state.provinces[a].troops);
   const strongest=state.provinces[provsSorted[0]];
-  // İç işler
+  // İç işler - Kişilik Odaklı Stratejiler
   if(Math.random()<.05&&(ai.gold||0)>1500){const roles=['military','economy','admin'].filter(r=>!ai.advisors[r]);if(roles.length){hireAdvisorFor(pid,pick(roles));return;}}
-  if(Math.random()<pers.techWeight*.5&&(ai.gold||0)>500){const b=pick(['military','defense','economy']);if(ai.tech[b]<TECH_MAX){const c=techCost(b,ai.tech[b]);if((ai.gold||0)>=c*1.5){ai.gold-=c;ai.tech[b]++;return;}}}
-  if((ai.stability||100)<50){ai.stability=Math.min(100,(ai.stability||100)+3);if(Math.random()<.5)return;}
-  if(Math.random()<pers.attackWeight*.4){const amt=20+Math.floor(Math.random()*30);const u=pick(['infantry','archer','cavalry']);const cost=amt*UNIT_TYPES[u].cost;if((ai.gold||0)>=cost){ai.gold-=cost;strongest.troops+=amt;strongest.unitFocus=u;return;}}
-  if(Math.random()<pers.econWeight*.5){const cands=provs.filter(n=>(state.provinces[n].devLevel||0)<DEV_MAX);if(cands.length){const c=pick(cands);const cost=devCost(state.provinces[c].devLevel||0);if((ai.gold||0)>=cost*1.5){ai.gold-=cost;state.provinces[c].devLevel=(state.provinces[c].devLevel||0)+1;return;}}}
-  if(Math.random()<pers.fortWeight*.4){const cands=provs.filter(n=>(state.provinces[n].fort||0)<FORT_MAX);if(cands.length){const c=pick(cands);const cost=fortCost(state.provinces[c].fort||0);if((ai.gold||0)>=cost*1.5){ai.gold-=cost;state.provinces[c].fort=(state.provinces[c].fort||0)+1;return;}}}
-  // Saldırı
+  
+  // Teknokrat veya Bilim Odaklı AI: Teknolojiye öncelik verir
+  if(Math.random()<pers.techWeight*.7&&(ai.gold||0)>400){const b=pick(['military','defense','economy']);if(ai.tech[b]<TECH_MAX){const c=techCost(b,ai.tech[b]);if((ai.gold||0)>=c){ai.gold-=c;ai.tech[b]++;return;}}}
+  
+  // Savunmacı AI: Kalelere öncelik verir
+  if(Math.random()<pers.fortWeight*.7&&(ai.gold||0)>150){const cands=provs.filter(n=>(state.provinces[n].fort||0)<FORT_MAX);if(cands.length){const c=pick(cands);const cost=fortCost(state.provinces[c].fort||0);if((ai.gold||0)>=cost){ai.gold-=cost;state.provinces[c].fort=(state.provinces[c].fort||0)+1;return;}}}
+  
+  // Tüccar AI: Şehir kalkınmasına öncelik verir
+  if(Math.random()<pers.econWeight*.7&&(ai.gold||0)>200){const cands=provs.filter(n=>(state.provinces[n].devLevel||0)<DEV_MAX);if(cands.length){const c=pick(cands);const cost=devCost(state.provinces[c].devLevel||0);if((ai.gold||0)>=cost){ai.gold-=cost;state.provinces[c].devLevel=(state.provinces[c].devLevel||0)+1;return;}}}
+  
+  // Militarist ve Asker Odaklı AI: Gelirini doğrudan askere döker
+  if(Math.random()<pers.recruitWeight*.8&&(ai.gold||0)>=40){
+    const u = pers.unitPref || 'infantry';
+    const unitCost = UNIT_TYPES[u].cost;
+    const maxCanBuy = Math.floor((ai.gold||0) / unitCost);
+    const amt = Math.max(5, Math.min(80, Math.floor(maxCanBuy * 0.7)));
+    if(amt > 0 && (ai.gold||0) >= amt * unitCost){
+      ai.gold -= amt * unitCost;
+      strongest.troops += amt;
+      strongest.unitFocus = u;
+      return;
+    }
+  }
+
+  // Saldırı Hazırlığı
   if(now<ai.nextAttackAt)return;
   if(strongest.troops<20)return;
   let warCount=0;for(const other in state.players){if(other===pid)continue;if(getRelation(pid,other)==='war')warCount++;}
-  const maxWars=ai.personality==='yavuz'?3:2;
+  const maxWars = pers.key === 'berserker' ? 4 : (pers.key === 'savunmaci' ? 1 : 2);
   if(warCount>=maxWars){const warEnemies=Object.keys(state.players).filter(o=>o!==pid&&getRelation(pid,o)==='war');if(warEnemies.length&&Math.random()<diff.warPeaceSeek*2){offerPeace(pid,pick(warEnemies));return;}return;}
-  const tgs=strongest.neighbors.filter(n=>{const t=state.provinces[n];if(!t||t.owner===pid)return false;return canAttackRelation(pid,t.owner).ok;});
+
+  // Hedef tespiti: Kara komşuları veya Denizci AI için amfibi kıyılar
+  let tgs=strongest.neighbors.filter(n=>{const t=state.provinces[n];if(!t||t.owner===pid)return false;return canAttackRelation(pid,t.owner).ok;});
+  let isAiNaval = false;
+
+  if(!tgs.length && pers.isNavalSpecialist && isCoastalProvince(provsSorted[0])){
+    // Denizci AI kıyı hedeflerini arar
+    const coastalEnemies = Object.keys(state.provinces).filter(n => state.provinces[n].owner !== pid && isCoastalProvince(n) && canAttackRelation(pid, state.provinces[n].owner).ok);
+    if(coastalEnemies.length && (ai.gold||0) >= 350){
+      tgs = coastalEnemies;
+      isAiNaval = true;
+    }
+  }
   if(!tgs.length)return;
   let tgtName;
   if(ai.personality==='delipetro'){tgs.sort((a,b)=>state.provinces[a].troops-state.provinces[b].troops);tgtName=tgs[0];}
@@ -5461,7 +5700,7 @@ function aiAct(pid){
   const attackChance=pers.attackWeight*diff.aggro;
   if(Math.random()>attackChance)return;
   ai.nextAttackAt=now+diff.attackDelay+Math.random()*10000;
-  hostExecuteAttack(pid, provsSorted[0], tgtName, false);
+  hostExecuteAttack(pid, provsSorted[0], tgtName, isAiNaval ? 'ocean' : false);
 }
 function doDynastyTick(){const now=Date.now();for(const pid in state.players){const p=state.players[pid];if(p.eliminated||!p.dynasty)continue;const age=(now-p.dynasty.bornAt)/1000;const lifeSpan=60+Math.floor(Math.random()*60)+p.dynasty.generation*10;if(age>lifeSpan&&Math.random()<.3){const oldLeader=p.leader;const heir=p.dynasty.heirs[0];if(!heir){p.leaderName='Yeni Lider';p.dynasty.heirs=[{name:'Veliaht',traits:pick(['courage','justice','cruelty','wisdom'])}];}else{p.leaderName=heir.name;p.dynasty.heirs.shift();if(!p.dynasty.heirs.length)p.dynasty.heirs=[{name:'Yeni Veliaht',traits:pick(['courage','justice','cruelty','wisdom'])}];}const title=p.title?LEADER_TITLES.find(x=>x.id===p.title):null;p.leader=p.leaderName+(title?' '+title.name:'');p.dynasty.generation++;p.dynasty.bornAt=now;const t=heir?heir.traits:'justice';if(t==='courage')p.stability=Math.min(100,(p.stability||100)+5);if(t==='cruelty')p.stability=Math.max(0,(p.stability||100)-10);if(t==='wisdom'){if(p.tech){const k=pick(['military','defense','economy']);p.tech[k]=Math.min(TECH_MAX,p.tech[k]+1);}}log(`👑 ${p.name}: ${oldLeader} öldü → ${p.leader}`,'event');if(pid===state.myId){toast(`👑 Lider öldü: ${p.leader}`,'gold',5000);checkAch('dynasty',pid);}}}}
 function updateLiveClock(){const el=document.getElementById('liveText');if(el)el.textContent=`🟢 ${timeStr()}`;}
@@ -5530,8 +5769,7 @@ function updateUI(){
   document.getElementById('tbGold').textContent=me?fmt(me.gold||0):0;
   if(me){let rate=0;for(const n in state.provinces){if(state.provinces[n].owner===state.myId)rate+=state.provinces[n].pop*2*getDevGoldMul(state.provinces[n])*getTaxMul(state.provinces[n]);}const rb=RELIGION_BONUS[me.religion]||{gold:1},gb=GOV_BONUS[me.gov]||{gold:1};rate=Math.floor(rate*rb.gold*gb.gold*getGoldMultiplier(me)*getStabilityGoldMul(me)*getSeasonGoldMul()*getDiff().goldMul*(state.speed||1));document.getElementById('tbGoldRate').textContent='+'+rate+'/sn';}else document.getElementById('tbGoldRate').textContent='';
   document.getElementById('tbTroops').textContent=tr;
-   const mpEl = document.getElementById('tbManpower');
-   if(mpEl) mpEl.textContent = (state.manpower || 5000).toLocaleString('tr-TR');
+
    const thrEl = document.getElementById('tbThreat');
    if(thrEl) thrEl.textContent = '%' + Math.round(state.threat || 0);
   document.getElementById('tbLands').textContent=cnt;
@@ -5703,7 +5941,7 @@ function showDiploModal(){
       <button onclick="proposePlayerPact('${p.id}','defense')">🛡️ Dayanışma</button>
       <button onclick="proposePlayerPact('${p.id}','research')">🔬 Teknoloji</button>
     ` : '';
-    return`<div class="diplo-row">${flagMini}<div class="name">${escapeHtml(p.name)} <span style="color:var(--text3);font-weight:400">(${cnt} il)</span> ${durStr} ${pactBadgeHtml}</div><div class="rel ${ri.cls}">${ri.icon} ${ri.label}</div><div class="actions-mini">${canWar?`<button data-diplo="war" data-tgt="${p.id}">⚔️ Savaş</button>`:''}${canPeace?`<button data-diplo="peace" data-tgt="${p.id}">🕊️ Barış</button>`:''}${canAlliance?`<button data-diplo="alliance" data-tgt="${p.id}">🤝 İttifak</button>`:''}${pactBtns}${canVassal?`<button data-diplo="vassal" data-tgt="${p.id}">🏛️ Vassal</button>`:''}</div></div>`;
+    return`<div class="diplo-row">${flagMini}<div class="name">${escapeHtml(p.name)} <span class="pers-badge" style="background:${AI_PERSONALITIES[p.personality]?.color||'#888'}22;border:1px solid ${AI_PERSONALITIES[p.personality]?.color||'#888'};color:${AI_PERSONALITIES[p.personality]?.color||'#888'}">${AI_PERSONALITIES[p.personality]?.icon||'⚔️'} ${AI_PERSONALITIES[p.personality]?.name||'Devlet'}</span> <span style="color:var(--text3);font-weight:400">(${cnt} il)</span> ${durStr} ${pactBadgeHtml}</div><div class="rel ${ri.cls}">${ri.icon} ${ri.label}</div><div class="actions-mini">${canWar?`<button data-diplo="war" data-tgt="${p.id}">⚔️ Savaş</button>`:''}${canPeace?`<button data-diplo="peace" data-tgt="${p.id}">🕊️ Barış</button>`:''}${canAlliance?`<button data-diplo="alliance" data-tgt="${p.id}">🤝 İttifak</button>`:''}${pactBtns}${canVassal?`<button data-diplo="vassal" data-tgt="${p.id}">🏛️ Vassal</button>`:''}</div></div>`;
   }).join('');
   el.querySelectorAll('button[data-diplo]').forEach(b=>{b.onclick=()=>{const d=b.dataset.diplo,t=b.dataset.tgt;if(net.mode==='client')sendAction({a:'diplo',diplo:d,tgt:t});else handleDiploAction(state.myId,{diplo:d,tgt:t});setTimeout(showDiploModal,100);};});}
   document.getElementById('diploModal').classList.add('show');
